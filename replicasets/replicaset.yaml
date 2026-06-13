@@ -19,3 +19,18 @@ spec:
   selector:
     matchLabels:  
       app: backend
+
+# selector:
+#   matchLabels:
+#     app: backend                      # AND with the expressions below
+#   matchExpressions:
+#     - key: tier
+#       operator: In
+#       values: [web, api]              # tier=web OR tier=api
+#     - key: env
+#       operator: NotIn
+#       values: [dev]                   # env must not be 'dev'
+#     - key: canary
+#       operator: DoesNotExist          # Pod must not have a 'canary' label
+#     - key: version
+#       operator: Exists                # Pod must have a 'version' label (any value)
