@@ -1,0 +1,9 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+# Only one PriorityClass in the cluster may set this.
+globalDefault: false
+preemptionPolicy: PreemptLowerPriority
+description: "Use this class for critical workloads that must be scheduled ahead of others."
