@@ -1,0 +1,10 @@
+# IngressClass is a cluster-scoped object (not namespaced).
+# The Ingress resource's spec.ingressClassName refers to metadata.name here.
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+spec:
+  # Identifies which controller handles Ingresses in this class.
+  # Must match the controller's --controller-class value.
+  controller: k8s.io/ingress-nginx
