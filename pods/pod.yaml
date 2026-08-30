@@ -8,3 +8,7 @@ spec:
   containers:
     - name: my-container
       image: nginx
+
+
+
+# apiVersion tells Kubernetes how to interpret the YAML object, which schema to use, and which controller/API implementation should handle it.

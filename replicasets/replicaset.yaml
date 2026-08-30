@@ -34,3 +34,14 @@ spec:
 #       operator: DoesNotExist          # Pod must not have a 'canary' label
 #     - key: version
 #       operator: Exists                # Pod must have a 'version' label (any value)
+
+
+# When the replication controller is created, it is not going to deploy a new instance of Pod if Pods with matching labels are already created.
+
+# In that case, do we really need to provide a template session in the replica set specification?
+
+# Since we are not expecting the replica set to create a new pod on deployment?
+
+# Yes we do.
+
+# Because in case one of the pods were to fail in the future, the replica set needs to create a new one to maintain the desired number of pods. And for the replica set to create a new pod, the template definition section is required.
