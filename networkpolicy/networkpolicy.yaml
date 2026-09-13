@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-backend
+  namespace: dev
+spec:
+  # This policy applies to Pods matching this selector (the "protected" Pods)
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+    - Ingress
+    - Egress
+
+  # Without this block, NO ingress traffic is allowed once policyTypes includes Ingress
+  ingress:
+    - from:
+        # Only allow traffic from Pods labelled app: frontend
+        - podSelector:
+            matchLabels:
+              app: frontend
+      ports:
+        - protocol: TCP
+          port: 8080
+
+  # Without this block, NO egress traffic is allowed once policyTypes includes Egress
+  egress:
+    - to:
+        # Allow this Pod to reach anything labelled app: database in this namespace
+        - podSelector:
+            matchLabels:
+              app: database
+      ports:
+        - protocol: TCP
+          port: 5432
+
+    - to:
+        # Allow DNS lookups (kube-dns/CoreDNS lives in kube-system)
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-ingress
+  namespace: dev
+spec:
+  # Empty podSelector = every Pod in this namespace
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  # No "ingress:" key at all = block every inbound connection (default-deny)

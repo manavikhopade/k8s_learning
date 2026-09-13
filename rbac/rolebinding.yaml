@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: my-namespace
+# Grants the permissions in roleRef to everyone listed in subjects
+subjects:
+  - kind: ServiceAccount
+    name: app-sa
+    namespace: my-namespace
+
+  - kind: User
+    name: manavi@example.com # Users are not objects in K8s; the name is just a string
+    apiGroup: rbac.authorization.k8s.io
+
+  - kind: Group
+    name: dev-team
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # roleRef is immutable: to point at a different Role, delete and recreate the binding
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io

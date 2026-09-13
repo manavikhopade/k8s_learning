@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-secrets-in-my-namespace
+  namespace: my-namespace
+subjects:
+  - kind: ServiceAccount
+    name: app-sa
+    namespace: my-namespace
+roleRef:
+  # A RoleBinding can point at a ClusterRole: the permissions then apply
+  # only inside this RoleBinding's namespace. This is how one ClusterRole
+  # gets reused per namespace instead of duplicating a Role everywhere.
+  kind: ClusterRole
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader
+  # A Role is namespaced: it only grants access inside this namespace
+  namespace: my-namespace
+rules:
+  # Read-only access to Pods
+  - apiGroups: [""] # "" is the core API group
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+
+  # Read Pod logs (a subresource, addressed as pods/log)
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+
+  # Manage ConfigMaps, but only these two by name
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: ["app-config", "feature-flags"]
+    verbs: ["get", "update", "patch"]
+
+  # Deployments live in the apps API group
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch"]

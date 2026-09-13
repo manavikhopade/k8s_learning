@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-secrets
+  namespace: dev
+# This is the "who": it hands the permissions in roleRef to each subject below
+subjects:
+  - kind: ServiceAccount
+    name: dev-sa
+    namespace: dev
+
+  - kind: User
+    name: manavi@example.com # Users aren't real K8s objects; this is just a name string
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # This is the "what": the Role being granted (must already exist in the same namespace)
+  kind: Role
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io

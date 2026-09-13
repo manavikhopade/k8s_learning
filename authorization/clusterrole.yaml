@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  # No namespace here: a ClusterRole is cluster-scoped
+  name: node-viewer
+rules:
+  # Nodes are cluster-scoped, so this permission can ONLY live in a ClusterRole
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-reader-all-namespaces
+rules:
+  # A namespaced resource can still go in a ClusterRole; that just means the
+  # permission is reusable across every namespace (see clusterrolebinding.yaml
+  # for the cluster-wide grant, or rolebinding-clusterrole.yaml style usage for
+  # a single-namespace grant)
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]

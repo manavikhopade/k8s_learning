@@ -1,0 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  # No namespace: a ClusterRole is cluster-scoped
+  name: node-and-namespace-viewer
+rules:
+  # Cluster-scoped resources can ONLY be granted through a ClusterRole
+  - apiGroups: [""]
+    resources: ["nodes", "namespaces", "persistentvolumes"]
+    verbs: ["get", "list", "watch"]
+
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+
+  # Non-resource URLs are also ClusterRole-only
+  - nonResourceURLs: ["/healthz", "/metrics"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: secret-reader
+rules:
+  # Reused across namespaces via a RoleBinding (see rolebinding-clusterrole.yaml)
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]

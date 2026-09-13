@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fitcheck-hostpath-pod
+spec:
+  containers:
+    - name: app
+      image: nginx:alpine
+      volumeMounts:
+        - name: fitcheck-storage
+          mountPath: /app/data
+  volumes:
+    - name: fitcheck-storage
+      hostPath:
+        path: /data/fitcheck
+        type: DirectoryOrCreate
+
+
+# Pod that uses a hostPath volume does not need a PV or PVC. The hostPath in the Pod spec mounts a path from the node filesystem directly into the container, so Kubernetes does not create or bind a PV/PVC for it.
+
+# Details and tradeoffs
+
+# hostPath (what your file uses): mounts a node path (e.g., /data/fitcheck) directly into the Pod. No PV/PVC required.
+# Pros: simple for local testing, quick iteration, no storage controller needed.
+# Cons: node-local (data stays on that node), not portable across nodes, not resilient to node failure, security risk (gives Pod access to host filesystem), unsuitable for production clusters.

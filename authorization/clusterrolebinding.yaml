@@ -1,0 +1,30 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: view-nodes-cluster-wide
+subjects:
+  - kind: ServiceAccount
+    name: dev-sa
+    namespace: dev # ServiceAccount subjects always need their namespace
+
+  - kind: User
+    name: manavi@example.com
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # ClusterRoleBinding + ClusterRole = permission applies across ALL namespaces
+  kind: ClusterRole
+  name: node-viewer
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pod-reader-cluster-wide
+subjects:
+  - kind: Group
+    name: dev-team
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: pod-reader-all-namespaces
+  apiGroup: rbac.authorization.k8s.io
